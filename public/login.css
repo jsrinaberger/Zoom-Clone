@@ -61,7 +61,7 @@ button[type=submit]:hover{
     cursor:pointer;
 }
 
-.login_link {
+.register_link {
     margin-top: 0px;
     justify-content: center;
     text-align:center;
