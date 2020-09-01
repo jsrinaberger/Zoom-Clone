@@ -24,6 +24,16 @@ const io = require('socket.io')(server);
 const { v4: uuidv4 } = require('uuid');
 const methodOverride = require('method-override');
 
+var dbUrl = 'mongodb://localhost:27017/zoomClone';
+const Mongo = require('mongodb').MongoClient;
+const mongo = new Mongo(dbUrl);
+const dbName = 'test';
+const assert = require('assert');
+const { MongoClient } = require('mongodb');
+
+
+//const connectToDatabse = require('./utils/db');
+
 /*
 const { ExpressPeerServer} = require('peer');
 const peerServer = ExpressPeerServer(server, {
@@ -95,6 +105,30 @@ app.post('/register', async (req, res) => {
             email: req.body.email,
             password: hashedPassword
         });
+
+        var account = {
+            id: uuidv4(),
+            name: req.body.name,
+            email: req.body.email,
+            password: hashedPassword
+        };
+
+       MongoClient.connect(dbUrl, (err, db) => {
+           if (err) throw err;
+           var dbo = db.db("test");
+           dbo.collection("user-data").insertOne(account, (err, res) => {
+               if (err) throw error;
+               console.log("Inserted");
+           })
+
+           dbo.collection("user-data").find({}).toArray((err, res) => {
+            if (err) throw error;
+            console.log(res);
+        })
+           db.close();
+       })
+        
+
         res.redirect('/login');
     } catch {
         res.redirect('/register');
@@ -135,6 +169,14 @@ function checkNoAuthentication (req, res, next) {
     next();
 }
 
+const startServer = async () => {
+    /*
+    await connectToDatabse({
+     useNewUrlParser: true, 
+     useUnifiedTopology: true
+    });*/
 
+    server.listen(3030);
+}
 
-server.listen(3030);
+startServer();
