@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -11,25 +12,42 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </head>
 <body>
-    <form method="post" action="/">
-        <input type="hidden" name="formID" value="login">
-        <input type="submit" value="Login">
-    </form>
+    <div class="header"></div>
 
-    <form action="/logout?_method=DELETE" method="post">
-        <button type="submit">Log Out</button>
-    </form>
+    <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+    <label for="openSidebarMenu" class="contactsIcon">
+    <div class="spinner diagonal part-1"></div>
+    <div class="spinner horizontal"></div>
+    <div class="spinner diagonal part-2"></div>
+    </label>
 
-    <form method="post" action="/">
-        <input type="hidden" name="formID" value="create-room">
-        <input type="submit" value="Create Room">
-    </form>
+    <div class="contactsMenu" id="contactsMenu">
+        <ul class="contacts">
+            <li>Contact 1</li>
+            <li>Contact 2</li>
+            <li>Contact 3</li>
+            <li>Contact 4</li>
+            <li>Contact 5</li> 
+          </ul>
+        </div>
 
-    <form method="post" action="/">
-        <input type="hidden" name="formID" value="join-room">
-        <input type="text" name="roomID" placeholder="Enter Room ID" required>
-        <input type="submit" value="Join Room">
-    </form>
+    </div>
+
+    <div class="main">
+        <form action="/logout?_method=DELETE" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+
+        <form method="post" action="/">
+            <input type="submit" value="Create Room">
+        </form>
+
+        <form method="post" action="/">
+            <input type="hidden" name="formID" value="join-room">
+            <input type="text" name="roomID" placeholder="Enter Room ID" required>
+            <input type="submit" value="Join Room">
+        </form>
+    </div>
 
     <script src='index.js'></script>
 </body>
