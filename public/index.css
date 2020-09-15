@@ -26,8 +26,9 @@ body {
     margin: 0 auto;
     display: block;
     height: 100%;
-    margin-top: 80px;
+    padding: 80px;
     text-align: center;
+    background: #343434;
 }
 
 #contactsMenu {

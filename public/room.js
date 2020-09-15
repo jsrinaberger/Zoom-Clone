@@ -127,3 +127,6 @@ const scrollMessages = () => {
     chatWindow.scrollTop(chatWindow.prop("scrollHeight"));
 }
 
+document.getElementById("leave").onclick = () => {
+    location.href = "/";
+}

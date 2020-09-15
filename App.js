@@ -75,7 +75,7 @@ app.post('/', async (req, res) => {
 
 });
 
-const users = [];
+var users = [];
 
 app.get('/login', checkNoAuthentication, (req, res) => {
     res.render('login');
@@ -123,6 +123,7 @@ app.post('/register', async (req, res) => {
 
            dbo.collection("user-data").find({}).toArray((err, res) => {
             if (err) throw error;
+            users = res;
             console.log(res);
         })
            db.close();
@@ -175,8 +176,35 @@ const startServer = async () => {
      useNewUrlParser: true, 
      useUnifiedTopology: true
     });*/
+    getUsers();
 
     server.listen(3030);
+}
+
+const getUsers = async () => {
+    try {
+        MongoClient.connect(dbUrl, (err, db) => {
+            if (err) throw err;
+            var dbo = db.db("test");
+            
+            dbo.collection("user-data").find({}).toArray((err, res) => {
+             if (err) throw error;
+             console.log(res);
+             for (i = 0; i < res.length; i++) {
+                users.push({
+                    id: res[i].id,
+                    name: res[i].name,
+                    email: res[i].email,
+                    password: res[i].password,
+                });
+             }
+         })
+            db.close();
+        })
+    } catch (err) {
+        console.log(err);
+    }
+    console.log(users);
 }
 
 startServer();
