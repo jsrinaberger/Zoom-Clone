@@ -11,6 +11,7 @@ const peer = new Peer(undefined, {
 });
 
 var videoStream;
+const peers = {};
 
 // request video access
 navigator.mediaDevices.getUserMedia({
@@ -34,6 +35,14 @@ navigator.mediaDevices.getUserMedia({
         $('ul').append(`<li class="message"><b>User Has Connected</br></li>`);
         connectToNewUser(userID, stream);
     });
+
+    socket.on('user-disconnect', (userID) => {
+        $('ul').append(`<li class="message"><b>User Has Disconnected</br></li>`);
+        
+        if (peers[userID]) {
+            peers[userID].close();
+        }
+    })
 
 
     // get message input
@@ -117,9 +126,15 @@ const connectToNewUser = (userID, stream) => {
     const call = peer.call(userID, stream);
     const video = document.createElement('video');
 
+    peers[userID] = call;
+
     call.on('stream', userVideoStream => {
         addVideoStream(video, userVideoStream);
     });
+
+    call.on('close', () => {
+        video.remove();
+    })
 }
 
 const scrollMessages = () => {

@@ -151,6 +151,10 @@ io.on('connection', socket => {
         socket.on('message', message => {
             io.to(roomID).emit('createMessage', message);
         });
+
+        socket.on('disconnect', () => {
+            socket.to(roomID).broadcast.emit('user-disconnect', userID);
+        });
     });
 });
 
