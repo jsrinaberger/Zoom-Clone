@@ -58,10 +58,14 @@ app.use(methodOverride('_method'));
 
 app.get('/', checkAuthentication, (req, res) => {
     res.render('index');
+
+    console.log("name: " + req.user.name);
+    console.log(req);
 });
 
 // check homepage form requests to determine where to redirect to
 app.post('/', async (req, res) => {
+    console.log(req);
     if (req.body.formID == 'create-room') {
         // redirect to user's new room with a unique room id
         res.redirect(`/${uuidv4()}`);
@@ -72,7 +76,6 @@ app.post('/', async (req, res) => {
     } else {
         res.redirect('/');
     }
-
 });
 
 var users = [];
@@ -139,21 +142,21 @@ app.post('/register', async (req, res) => {
 
 // sending user to their unique room they created
 app.get('/:room', checkAuthentication, (req, res) => {
-    res.render('room', {roomId: req.params.room });
+    res.render('room', {roomId: req.params.room, userName: req.user.name});
 });
 
 
 io.on('connection', socket => {
-    socket.on('join-room', (roomID, userID) => {
+    socket.on('join-room', (roomID, userID, connectedUserName) => {
         socket.join(roomID);
-        socket.to(roomID).broadcast.emit('user-connected', userID);
+        socket.to(roomID).broadcast.emit('user-connected', userID, connectedUserName);
 
-        socket.on('message', message => {
-            io.to(roomID).emit('createMessage', message);
+        socket.on('message', (message, connectedUserName) => {
+            io.to(roomID).emit('createMessage', message, connectedUserName);
         });
 
         socket.on('disconnect', () => {
-            socket.to(roomID).broadcast.emit('user-disconnect', userID);
+            socket.to(roomID).broadcast.emit('user-disconnect', userID, connectedUserName);
         });
     });
 });

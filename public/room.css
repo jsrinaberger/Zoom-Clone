@@ -96,4 +96,15 @@ video {
 .messages {
     color: white;
     list-style: none;
+    font-size: 14px;
+}
+
+.chat_line {
+    color: white;
+    border: 1px solid white;
+    margin-right: 30px;
+    opacity: 0.2;
+    padding: 0;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }

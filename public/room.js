@@ -29,15 +29,22 @@ navigator.mediaDevices.getUserMedia({
         call.on('stream', userVideoStream => {
             addVideoStream(video, userVideoStream);
         });
+
+        call.on('close', () => {
+            video.remove();
+            console.log("boof")
+        });
     });
 
-    socket.on('user-connected', (userID) => {
-        $('ul').append(`<li class="message"><b>User Has Connected</br></li>`);
+    socket.on('user-connected', (userID, connectedUserName) => {
+        $('ul').append(`<hr class='chat_line'>`);
+        $('ul').append(`<li class="message"><b>${connectedUserName} Has Connected</br></li>`);
         connectToNewUser(userID, stream);
     });
 
-    socket.on('user-disconnect', (userID) => {
-        $('ul').append(`<li class="message"><b>User Has Disconnected</br></li>`);
+    socket.on('user-disconnect', (userID, connectedUserName) => {
+        $('ul').append(`<hr class='chat_line'>`);
+        $('ul').append(`<li class="message"><b>${connectedUserName} Has Disconnected</br></li>`);
         
         if (peers[userID]) {
             peers[userID].close();
@@ -51,14 +58,15 @@ navigator.mediaDevices.getUserMedia({
     // send message when enter is pressed
     $('html').keydown((e) => {
         if (e.which == 13 && message.val().length !== 0) {
-            socket.emit('message', message.val());
+            socket.emit('message', message.val(), userName);
             message.val('');
         }
     });
 
     // receive and display message
-    socket.on('createMessage', receivedMessage => {
-        $('ul').append(`<li class="message"><b>user</b><br/>${receivedMessage}</li>`);
+    socket.on('createMessage', (receivedMessage, connectedUserName) => {
+        $('ul').append(`<hr class='chat_line'>`);
+        $('ul').append(`<li class="message"><b>${connectedUserName}:</b><br/>${receivedMessage}</li>`);
         scrollMessages();
     });
 });
@@ -117,7 +125,7 @@ const setStopVideo = () => {
 }
 
 peer.on('open', id => {
-    socket.emit('join-room', roomID, id);
+    socket.emit('join-room', roomID, id, userName);
     console.log('host id ' + id);
 });
 
